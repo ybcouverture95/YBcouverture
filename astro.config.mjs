@@ -21,4 +21,10 @@ export default defineConfig({
       filter: (page) => !NON_INDEXABLES.some((path) => new URL(page).pathname === path),
     }),
   ],
+  build: {
+    // Le CSS du site est petit (quelques Ko) : l'inliner dans le <head> évite
+    // les requêtes <link rel="stylesheet"> qui bloquaient le rendu initial
+    // (signalé par PageSpeed Insights, ~600ms sur le chemin critique du LCP).
+    inlineStylesheets: 'always',
+  },
 });
