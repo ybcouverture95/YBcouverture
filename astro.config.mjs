@@ -15,7 +15,7 @@ const NON_INDEXABLES = ['/contact/merci/'];
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://yb-couverture.fr',
+  site: 'https://www.yb-couverture.fr',
   integrations: [
     sitemap({
       filter: (page) => !NON_INDEXABLES.some((path) => new URL(page).pathname === path),
