@@ -1,7 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site, cities, cityZones, socials } from '../data/site';
+import { site, cities, cityZones, socials, testimonials } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
@@ -26,6 +26,29 @@ const ogImageURL = new URL(image, Astro.site);
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const siteURL = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const pageTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+
+// Convertit "mai 2026" / "déc. 2025" en "2026-05" pour Review.datePublished (schema.org)
+const MOIS: Record<string, string> = {
+  janv: '01', fév: '02', févr: '02', mars: '03', avr: '04', mai: '05', juin: '06',
+  juil: '07', août: '08', sept: '09', oct: '10', nov: '11', déc: '12',
+};
+const toIsoMonth = (frDate: string) => {
+  const [moisRaw, annee] = frDate.replace('.', '').trim().split(/\s+/);
+  const cle = moisRaw.toLowerCase();
+  const mois = MOIS[cle] ?? Object.entries(MOIS).find(([k]) => cle.startsWith(k))?.[1];
+  return mois ? `${annee}-${mois}` : annee;
+};
+
+// Avis réellement affichés sur la page (section Testimonials) : un aggregateRating
+// doit être adossé à des avis consultables sur le site pour rester conforme aux
+// règles de Google sur les extraits d'avis.
+const reviewLd = testimonials.map((t) => ({
+  '@type': 'Review',
+  author: { '@type': 'Person', name: t.name },
+  datePublished: toIsoMonth(t.date),
+  reviewBody: t.text,
+  reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5, worstRating: 1 },
+}));
 
 // Zones desservies : départements (AdministrativeArea) + communes (City) pour un maillage local riche
 const areaServed = [
@@ -77,6 +100,7 @@ const defaultJsonLd = {
     bestRating: 5,
     worstRating: 1,
   },
+  review: reviewLd,
   sameAs: [site.alloVoisinsUrl, ...socials.map((s) => s.url)],
 };
 

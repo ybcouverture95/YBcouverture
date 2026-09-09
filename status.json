@@ -1,7 +1,7 @@
 {
   "client": "YB Couverture",
-  "etape": "corrections",
-  "avancement": 85,
-  "derniere_maj": "2026-07-31",
-  "message": "Vos retours sont en cours d'intégration"
+  "etape": "mise_en_ligne",
+  "avancement": 100,
+  "derniere_maj": "2026-09-09",
+  "message": "Audit complet réalisé : bug critique corrigé (le formulaire de contact échouait silencieusement sur le champ \"Téléphone\" accentué depuis la mise en ligne, aucune demande de devis n'arrivait), headers de sécurité ajoutés, données structurées des avis mises en conformité."
 }
